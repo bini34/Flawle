@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+.next/
+build/
+.env
+.DS_Store
+**/android/**/build/
+**/ios/Pods/
+.idea/
+.vscode/
+dist/
+.env.local
