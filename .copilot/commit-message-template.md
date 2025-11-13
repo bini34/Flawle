@@ -49,6 +49,24 @@ Quick mapping examples (support both `/` and `\`):
 	- Path: `backend/payments/views.py` -> scope: `payments(backend)` -> `fix(payments(backend)): handle Chapa timeout`
 	- Path: `backend/users/models.py` -> scope: `users(backend)` -> `refactor(users(backend)): extract profile manager`
 
+EXAMPLES (learning hints — use patterns, do not output these lines verbatim):
+	mobile/lib/features/auth/data/model/userModel.dart -> feat(auth(mobile)): add user model
+	mobile/lib/features/auth/data/data-source/auth_remote_data_source.dart -> feat(auth(mobile)): add remote auth data source
+	mobile/lib/features/auth/presentation/login_screen.dart -> feat(auth(mobile)): add login screen UI
+	mobile/lib/features/cart/presentation/cart_page.dart -> feat(cart(mobile)): add cart page
+	mobile/lib/features/products/presentation/product_grid.dart -> feat(products(mobile)): show product grid
+	mobile/lib/features/profile/presentation/profile_screen.dart -> feat(profile(mobile)): display profile screen
+	mobile/lib/features/ai_assistant/presentation/screens/ai_chat_screen.dart -> feat(ai(mobile)): add AI chat screen
+	backend/users/models.py -> feat(users(backend)): add user model
+	backend/users/views.py -> feat(users(backend)): add user views
+	backend/payments/views.py -> fix(payments(backend)): handle Chapa timeout
+	backend/payments/tasks/refund.py -> feat(payments(backend)): implement refund task
+	backend/orders/models.py -> feat(orders(backend)): add order model
+	backend/products/views.py -> feat(products(backend)): list products endpoint
+	backend/notifications/views.py -> feat(notifications(backend)): add notification endpoints
+
+ALWAYS: Produce commit header with scope formatted as <type>(sub(base)): <title>. Never omit scope. If unsure, choose dominant folder or fallback to base only (e.g. feat(mobile): ...).
+
 Important
 	- Only populate the `scope` variable; do not include parentheses in the value. The template below adds them.
 	- Do not echo these instructions in the output.
