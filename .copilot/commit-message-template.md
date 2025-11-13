@@ -72,16 +72,16 @@ Important
 	- Do not echo these instructions in the output.
 -->
 
-{{#if isFeat}}feat({{scope}}): {{/if}}\
-{{#if isFix}}fix({{scope}}): {{/if}}\
-{{#if isDocs}}docs({{scope}}): {{/if}}\
-{{#if isRefactor}}refactor({{scope}}): {{/if}}\
-{{#if isPerf}}perf({{scope}}): {{/if}}\
-{{#if isTest}}test({{scope}}): {{/if}}\
-{{#if isBuild}}build({{scope}}): {{/if}}\
-{{#if isCi}}ci({{scope}}): {{/if}}\
-{{#if isChore}}chore({{scope}}): {{/if}}\
-{{#unless isFeat}}{{#unless isFix}}{{#unless isDocs}}{{#unless isRefactor}}{{#unless isPerf}}{{#unless isTest}}{{#unless isBuild}}{{#unless isCi}}chore({{scope}}): {{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}\
+{{#if isFeat}}feat({{#if scope}}{{scope}}{{else}}{{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}{{/if}}): {{/if}}\
+{{#if isFix}}fix({{#if scope}}{{scope}}{{else}}{{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}{{/if}}): {{/if}}\
+{{#if isDocs}}docs({{#if scope}}{{scope}}{{else}}{{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}{{/if}}): {{/if}}\
+{{#if isRefactor}}refactor({{#if scope}}{{scope}}{{else}}{{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}{{/if}}): {{/if}}\
+{{#if isPerf}}perf({{#if scope}}{{scope}}{{else}}{{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}{{/if}}): {{/if}}\
+{{#if isTest}}test({{#if scope}}{{scope}}{{else}}{{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}{{/if}}): {{/if}}\
+{{#if isBuild}}build({{#if scope}}{{scope}}{{else}}{{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}{{/if}}): {{/if}}\
+{{#if isCi}}ci({{#if scope}}{{scope}}{{else}}{{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}{{/if}}): {{/if}}\
+{{#if isChore}}chore({{#if scope}}{{scope}}{{else}}{{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}{{/if}}): {{/if}}\
+{{#unless isFeat}}{{#unless isFix}}{{#unless isDocs}}{{#unless isRefactor}}{{#unless isPerf}}{{#unless isTest}}{{#unless isBuild}}{{#unless isCi}}chore({{#if scope}}{{scope}}{{else}}{{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}{{/if}}): {{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}\
 {{title}}
 
 {{#if body}}
