@@ -68,20 +68,21 @@ EXAMPLES (learning hints — use patterns, do not output these lines verbatim):
 ALWAYS: Produce commit header with scope formatted as <type>(sub(base)): <title>. Never omit scope. If unsure, choose dominant folder or fallback to base only (e.g. feat(mobile): ...).
 
 Important
-	- Only populate the `scope` variable; do not include parentheses in the value. The template below adds them.
+	- Do NOT set a raw `scope` variable. Instead, set `base` and optional `sub` as described above. The template will compose `sub(base)` automatically.
+	- Never omit `base`. If `sub` is unclear, still set `base` to either `mobile` or `backend`.
 	- Do not echo these instructions in the output.
 -->
 
-{{#if isFeat}}feat({{#if scope}}{{scope}}{{else}}{{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}{{/if}}): {{/if}}\
-{{#if isFix}}fix({{#if scope}}{{scope}}{{else}}{{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}{{/if}}): {{/if}}\
-{{#if isDocs}}docs({{#if scope}}{{scope}}{{else}}{{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}{{/if}}): {{/if}}\
-{{#if isRefactor}}refactor({{#if scope}}{{scope}}{{else}}{{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}{{/if}}): {{/if}}\
-{{#if isPerf}}perf({{#if scope}}{{scope}}{{else}}{{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}{{/if}}): {{/if}}\
-{{#if isTest}}test({{#if scope}}{{scope}}{{else}}{{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}{{/if}}): {{/if}}\
-{{#if isBuild}}build({{#if scope}}{{scope}}{{else}}{{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}{{/if}}): {{/if}}\
-{{#if isCi}}ci({{#if scope}}{{scope}}{{else}}{{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}{{/if}}): {{/if}}\
-{{#if isChore}}chore({{#if scope}}{{scope}}{{else}}{{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}{{/if}}): {{/if}}\
-{{#unless isFeat}}{{#unless isFix}}{{#unless isDocs}}{{#unless isRefactor}}{{#unless isPerf}}{{#unless isTest}}{{#unless isBuild}}{{#unless isCi}}chore({{#if scope}}{{scope}}{{else}}{{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}{{/if}}): {{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}\
+{{#if isFeat}}feat({{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}): {{/if}}\
+{{#if isFix}}fix({{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}): {{/if}}\
+{{#if isDocs}}docs({{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}): {{/if}}\
+{{#if isRefactor}}refactor({{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}): {{/if}}\
+{{#if isPerf}}perf({{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}): {{/if}}\
+{{#if isTest}}test({{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}): {{/if}}\
+{{#if isBuild}}build({{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}): {{/if}}\
+{{#if isCi}}ci({{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}): {{/if}}\
+{{#if isChore}}chore({{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}): {{/if}}\
+{{#unless isFeat}}{{#unless isFix}}{{#unless isDocs}}{{#unless isRefactor}}{{#unless isPerf}}{{#unless isTest}}{{#unless isBuild}}{{#unless isCi}}chore({{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}): {{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}\
 {{title}}
 
 {{#if body}}
