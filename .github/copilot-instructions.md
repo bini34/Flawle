@@ -47,16 +47,16 @@ Goal: Always include a Conventional Commits scope derived from the changed file 
 ## Commit message template
 -->
 
-{{#if isFeat}}feat({{scope}}): {{/if}}
-{{#if isFix}}fix({{scope}}): {{/if}}
-{{#if isDocs}}docs({{scope}}): {{/if}}
-{{#if isRefactor}}refactor({{scope}}): {{/if}}
-{{#if isPerf}}perf({{scope}}): {{/if}}
-{{#if isTest}}test({{scope}}): {{/if}}
-{{#if isBuild}}build({{scope}}): {{/if}}
-{{#if isCi}}ci({{scope}}): {{/if}}
-{{#if isChore}}chore({{scope}}): {{/if}}
-{{#unless isFeat}}{{#unless isFix}}{{#unless isDocs}}{{#unless isRefactor}}{{#unless isPerf}}{{#unless isTest}}{{#unless isBuild}}{{#unless isCi}}chore({{scope}}): {{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}
+{{#if isFeat}}feat({{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}): {{/if}}
+{{#if isFix}}fix({{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}): {{/if}}
+{{#if isDocs}}docs({{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}): {{/if}}
+{{#if isRefactor}}refactor({{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}): {{/if}}
+{{#if isPerf}}perf({{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}): {{/if}}
+{{#if isTest}}test({{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}): {{/if}}
+{{#if isBuild}}build({{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}): {{/if}}
+{{#if isCi}}ci({{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}): {{/if}}
+{{#if isChore}}chore({{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}): {{/if}}
+{{#unless isFeat}}{{#unless isFix}}{{#unless isDocs}}{{#unless isRefactor}}{{#unless isPerf}}{{#unless isTest}}{{#unless isBuild}}{{#unless isCi}}chore({{#if sub}}{{sub}}({{base}}){{else}}{{base}}{{/if}}): {{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}{{/unless}}
 {{title}}
 
 {{#if body}}
