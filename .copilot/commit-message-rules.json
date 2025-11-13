@@ -1,31 +1,4 @@
 {
-  "scopes": {
-    "backend/ai_assistant/": "ai(backend)",
-    "backend/config/": "config",
-    "backend/core/": "core",
-    "backend/notifications/": "notifications(backend)",
-    "backend/orders/": "orders(backend)",
-    "backend/payments/": "payments(backend)",
-    "backend/products/": "products(backend)",
-    "backend/reports/": "reports",
-    "backend/users/": "users",
-    "backend/scripts/": "ci",
-    "backend/requirements/": "deps",
-    "backend/media/": "assets",
-
-    "mobile/lib/features/ai_assistant/": "ai(mobile)",
-    "mobile/lib/features/auth/": "auth",
-    "mobile/lib/features/cart/": "cart",
-    "mobile/lib/features/notification/": "notifications(mobile)",
-    "mobile/lib/features/onboard/": "onboarding",
-    "mobile/lib/features/orders/": "orders(mobile)",
-    "mobile/lib/features/payment/": "payments(mobile)",
-    "mobile/lib/features/products/": "products(mobile)",
-    "mobile/lib/features/profile/": "profile",
-    "mobile/lib/features/main_splash_ui/": "ui",
-    "mobile/lib/core/": "core",
-    "mobile/lib/": "mobile",
-    "mobile/": "mobile"
-  },
-  "defaultScope": "shared"
+  "deprecated": true,
+  "note": "This file is intentionally unused. Scope inference is handled by .copilot/commit-message-template.md instructions."
 }
