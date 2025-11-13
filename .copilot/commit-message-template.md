@@ -6,13 +6,13 @@ Goal: Always include a Conventional Commits scope derived from the changed file 
 How to determine the scope (write the final scope value into the variable `scope`):
 
 1) Base scope from top-level folder
-	- If any staged/changed file path starts with `mobile/`, set base = "mobile".
-	- If any staged/changed file path starts with `backend/`, set base = "backend".
+	- If any staged/changed file path starts with `mobile/` or contains `mobile\`, set base = "mobile".
+	- If any staged/changed file path starts with `backend/` or contains `backend\`, set base = "backend".
 	- If files from both exist, pick the side with more changed files; if tied, pick the one that has the most meaningful application change (not config). If still tied, prefer "backend".
 
 2) Sub-scope from feature/app folder
-	- For mobile: If a file matches `mobile/lib/features/<feature>/...`, set sub = `<feature>`.
-	- For backend: If a file matches `backend/<app>/...`, set sub = `<app>` (exclude folders like `config`, `core`, `media`, `scripts`).
+	- For mobile: If a file matches `mobile/lib/features/<feature>/...` or `mobile\lib\features\<feature>\...`, set sub = `<feature>`.
+	- For backend: If a file matches `backend/<app>/...` or `backend\<app>\...`, set sub = `<app>` (exclude folders like `config`, `core`, `media`, `scripts`).
 
 3) Normalize the sub-scope
 	- Lowercase; replace spaces/underscores/dashes with a single hyphen.
@@ -23,6 +23,21 @@ How to determine the scope (write the final scope value into the variable `scope
 	- If both sub and base exist, set `scope` = `${sub}(${base})`.
 	- If only base exists, set `scope` = `${base}`.
 	- If multiple different sub-scopes are present, select the dominant one (by file count). If still ambiguous, fall back to base-only.
+
+MANDATORY: Never leave scope empty. If you cannot infer a sub-scope confidently, set `scope` to the base ("mobile" or "backend").
+
+Quick mapping examples (support both `/` and `\`):
+	- `mobile/*` -> base: mobile
+	- `mobile/lib/features/ai_assistant/*` -> sub: ai
+	- `mobile/lib/features/auth/*` -> sub: auth
+	- `mobile/lib/features/cart/*` -> sub: cart
+	- `mobile/lib/features/payment*/**` -> sub: payments
+	- `mobile/lib/features/products/*` -> sub: products
+	- `mobile/lib/features/orders/*` -> sub: orders
+	- `backend/payments/*` -> sub: payments
+	- `backend/users/*` -> sub: users
+	- `backend/orders/*` -> sub: orders
+	- `backend/products/*` -> sub: products
 
 5) Title guidance (for `title`)
 	- Imperative, sentence case; keep under ~72 chars.

@@ -1,4 +1,0 @@
-{
-  "deprecated": true,
-  "note": "This file is intentionally unused. Scope inference is handled by .copilot/commit-message-template.md instructions."
-}
