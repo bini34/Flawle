@@ -45,13 +45,12 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'core.middleware.jwt.JWTAuthenticationMiddleware',  # Custom JWT
 ]
 
 # REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+     'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
@@ -91,8 +90,21 @@ USE_TZ = True
 # JWT
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': True,
+
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+
+    # THIS IS THE KEY — READ FROM COOKIES!
+    'AUTH_COOKIE': 'access',           # Cookie name for access token
+    'AUTH_COOKIE_REFRESH': 'refresh',  # Cookie name for refresh token
+    'AUTH_COOKIE_SECURE': True,        # Only HTTPS
+    'AUTH_COOKIE_HTTP_ONLY': True,     # Block JS access
+    'AUTH_COOKIE_SAME_SITE': 'Lax',    # CSRF protection
+    'AUTH_COOKIE_PATH': '/',
 }
 
 # CORS
