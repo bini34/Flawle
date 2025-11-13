@@ -1,33 +1,41 @@
-# users/serializers.py
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-
-User = get_user_model()
+from .models import User
 
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, min_length=8)
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password', 'first_name', 'last_name')
+        fields = ('email', 'first_name', 'last_name', 'phone', 'address', 'password', 'password2',)
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({"password": "Password fields didn't match."})
+        return attrs
 
     def create(self, validated_data):
-        user = User.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data.get('email'),
-            password=validated_data['password'],
-            first_name=validated_data.get('first_name', ''),
-            last_name=validated_data.get('last_name', ''),
+        validated_data.pop('password2')
+        user = User.objects.create(
+            email=validated_data['email'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+            phone=validated_data['phone'],
+            address=validated_data.get('address', ''),
         )
+        user.set_password(validated_data['password'])
+        user.save()
         return user
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField()
+    email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
-
+    
+   
     def validate(self, data):
-        from django.contrib.auth import authenticate
         user = authenticate(**data)
         if user and user.is_active:
             refresh = RefreshToken.for_user(user)
@@ -37,3 +45,6 @@ class LoginSerializer(serializers.Serializer):
                 'user': user,
             }
         raise serializers.ValidationError("Invalid credentials")
+
+class LogoutSerializer(serializers.Serializer):
+       refresh = serializers.CharField(help_text="Refresh token to blacklist")
