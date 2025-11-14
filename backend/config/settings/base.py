@@ -122,6 +122,10 @@ DATABASES = {
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': os.getenv('POSTGRES_HOST', 'db'),
         'PORT': os.getenv('POSTGRES_PORT', '5432'),
+        'OPTIONS': {
+            # Many managed Postgres providers (e.g. Aiven) require TLS
+            'sslmode': os.getenv('POSTGRES_SSLMODE', 'require'),
+        },
     }
 }
 
