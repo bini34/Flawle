@@ -4,28 +4,39 @@ from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import LoginSerializer, RegisterSerializer, LogoutSerializer
+from .serializers import (
+    LoginSerializer,
+    RegisterSerializer,
+    LogoutSerializer,
+    verifyOTPSerializer,
+    ResendOTPSerializer,
+)
 from .models import User
-
-
+import logging
+logger = logging.getLogger(__name__)
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
 
     def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        user = User.objects.get(email=response.data['email'])
-        return Response({
-            "message": "User registered successfully.",
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        logger.info(f"New user registered: {user}")
+        response = Response({
+            "message": "User registered. OTP sent to email.",
             "user": {
                 "id": user.id,
                 "email": user.email,
-                "full_name": user.full_name,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "phone": user.phone,
                 "role": user.role,
                 "is_verified": user.is_verified,
             }
         }, status=status.HTTP_201_CREATED)
+        return response
 
 
 class LoginView(generics.GenericAPIView):
@@ -44,8 +55,8 @@ class LoginView(generics.GenericAPIView):
             return Response({"error": "Invalid credentials"}, status=400)
 
         # Block login if not verified (optional later)
-        # if not user.is_verified:
-        #     return Response({"error": "Please verify your email first"}, status=403)
+        if not user.is_verified:
+             return Response({"error": "Please verify your email first"}, status=403)
 
         refresh = RefreshToken.for_user(user)
 
@@ -54,9 +65,11 @@ class LoginView(generics.GenericAPIView):
             "user": {
                 "id": user.id,
                 "email": user.email,
-                "full_name": user.full_name,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "phone": user.phone,
                 "role": user.role,
-                "is_verified": user.is_verified
+                "is_verified": user.is_verified,
             }
         })
 
@@ -86,3 +99,35 @@ class LogoutView(generics.GenericAPIView):
             return response
         except Exception as e:
             return Response({"error": "Invalid token"}, status=400)
+
+
+class VerifyOTPView(generics.GenericAPIView):
+    serializer_class = verifyOTPSerializer
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data.get('user')
+        return Response({
+            "message": "Email verified successfully.",
+            "user": {
+                "id": user.id,
+                "email": user.email,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "phone": user.phone,
+                "role": user.role,
+                "is_verified": user.is_verified,
+            }
+        }, status=status.HTTP_200_OK)
+
+
+class ResendOTPView(generics.GenericAPIView):
+    serializer_class = ResendOTPSerializer
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response({"message": "OTP resent if eligible"}, status=status.HTTP_200_OK)
