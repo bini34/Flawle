@@ -29,4 +29,27 @@ abstract class AuthDataSource {
   Future<Either<String, Unit>> signOut();
 
   Future<Either<String, UserModel>> getSignedInUser();
+
+  Future<Either<String, UserModel>> updateUser(UserModel userModel);
+
+  // OTP verification APIs
+  Future<Either<String, Unit>> verifyOtp({
+    String? email,
+    String? phone,
+    required String code,
+  });
+
+  Future<Either<String, Unit>> resendOtp({String? email, String? phone});
+
+  // ---------- Password Reset Flow ----------
+  Future<Either<String, Unit>> requestPasswordReset(String email);
+  Future<Either<String, Unit>> verifyPasswordResetOtp({
+    required String email,
+    required String code,
+  });
+  Future<Either<String, Unit>> resetPassword({
+    required String email,
+    required String code,
+    required String newPassword,
+  });
 }
