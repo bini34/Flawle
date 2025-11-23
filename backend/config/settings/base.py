@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'drf_yasg',  # Swagger
+    'django_celery_beat',
 
     # Local apps
     'core',
@@ -45,6 +46,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'core.middleware.JsonError.JsonErrorMiddleware',  # Custom JSON error middleware
 ]
 
 # REST Framework
@@ -106,9 +108,15 @@ SIMPLE_JWT = {
     'AUTH_COOKIE_SAME_SITE': 'Lax',    # CSRF protection
     'AUTH_COOKIE_PATH': '/',
 }
-
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '172.31.195.138',   # ← THIS IS REQUIRED
+    '[::1]',
+]
 # CORS
 CORS_ALLOWED_ORIGINS = [
+    'http://172.31.195.138',
     "http://localhost:3000",  
     "http://127.0.0.1:3000",
 ]
@@ -146,5 +154,64 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Celery
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://redis:6379/0')
 CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', CELERY_BROKER_URL)
+CELERY_BEAT_SCHEDULE = {
+    'cleanup-unverified-every-hour': {
+        'task': 'users.cleanup_unverified',
+        'schedule': 60 * 60,  # every hour
+    },
+}
 
 AUTH_USER_MODEL = 'users.User'
+# Email
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'no-reply@flawle.local')
+EMAIL_HOST = os.getenv('EMAIL_HOST', '')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587')) if os.getenv('EMAIL_HOST') else None
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'true').lower() in {'1', 'true', 'yes', 'on'} if os.getenv('EMAIL_HOST') else None
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+
+# Cache (Redis recommended)
+CACHES = {
+    'default': {
+        'BACKEND': os.getenv('CACHE_BACKEND', 'django.core.cache.backends.locmem.LocMemCache'),
+        'LOCATION': os.getenv('CACHE_LOCATION', ''),
+    }
+}
+
+
+# Ensure BASE_DIR points to the project root (backend/) and not config/
+# Remove accidental redefinition that broke log file paths
+# Also ensure the logs directory exists before logging config initializes
+LOG_DIR = (BASE_DIR / 'core' / 'logs')
+os.makedirs(LOG_DIR, exist_ok=True)
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+        "file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": str(LOG_DIR / "app.log"),
+            "maxBytes": 10_485_760,
+            "backupCount": 5,
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        "": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+        },
+    },
+}
