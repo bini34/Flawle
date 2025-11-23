@@ -7,7 +7,6 @@ class User extends Equatable {
   final String? email;
   final String? password;
   final String? phone;
-  final String? address;
   final bool isVerified;
 
   const User({
@@ -17,7 +16,6 @@ class User extends Equatable {
     this.email,
     this.password,
     this.phone,
-    this.address,
     this.isVerified = false,
   });
 
@@ -29,7 +27,6 @@ class User extends Equatable {
     email,
     password,
     phone,
-    address,
     isVerified,
   ];
 }
