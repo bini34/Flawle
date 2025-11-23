@@ -1,4 +1,5 @@
 import 'package:flawle/core/configs/router-config/route_names.dart';
+import 'package:flawle/features/auth/presentation/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -11,9 +12,18 @@ class SplashScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isMounted = useIsMounted();
     useEffect(() {
-      Future.delayed(const Duration(seconds: 2)).then((_) {
+      // Immediately attempt to get current user; keep a short splash delay.
+      Future.wait([
+        Future.delayed(const Duration(milliseconds: 1200)),
+        ref.read(authProvider.notifier).getCurrentUser(),
+      ]).then((values) {
         if (!isMounted()) return;
-        _getCurrentUser(ref, context);
+        final user = values[1];
+        if (user != null) {
+          context.goNamed(RouteNames.productList);
+        } else {
+          context.goNamed(RouteNames.onboarding);
+        }
       });
       return null;
     }, []);
@@ -41,17 +51,5 @@ class SplashScreen extends HookConsumerWidget {
     );
   }
 
-  void _getCurrentUser(WidgetRef ref, BuildContext context) async {
-    // TODO: Replace with actual user lookup (e.g. ref.read(authNotifierProvider))
-    final user = null; // Simulated unauthenticated state
-    if (!context.mounted) return;
-
-    if (user != null) {
-      // Authenticated: go to main product list
-      context.goNamed(RouteNames.productList);
-    } else {
-      // Not authenticated: go to sign in
-      context.goNamed(RouteNames.signIn);
-    }
-  }
+  // Legacy method removed; logic in useEffect.
 }
