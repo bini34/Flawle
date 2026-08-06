@@ -63,7 +63,7 @@ class VerificationScreen extends HookConsumerWidget {
       final isFocused = focuses[index].hasFocus;
       final borderColor = (isFocused || hasText)
           ? primary
-          : theme.dividerColor.withOpacity(0.6);
+          : theme.dividerColor.withValues(alpha: 0.6);
 
       return SizedBox(
         width: 45,
@@ -206,7 +206,7 @@ class VerificationScreen extends HookConsumerWidget {
               Text(
                 'To ensure the security of your account we sent a code. Please check your text messages for a code and enter it below.',
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.textTheme.bodyMedium?.color?.withOpacity(0.8),
+                  color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.8),
                 ),
               ),
               const SizedBox(height: 24),
@@ -223,7 +223,7 @@ class VerificationScreen extends HookConsumerWidget {
               Text(
                 "If you haven't received a code, please click the 'Resend Code' button. If you need assistance, please contact our ",
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.textTheme.bodySmall?.color?.withOpacity(0.7),
+                  color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                 ),
               ),
               GestureDetector(
@@ -246,7 +246,7 @@ class VerificationScreen extends HookConsumerWidget {
                   style: OutlinedButton.styleFrom(
                     backgroundColor: theme.colorScheme.surface,
                     side: BorderSide(
-                      color: theme.dividerColor.withOpacity(0.6),
+                      color: theme.dividerColor.withValues(alpha: 0.6),
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(

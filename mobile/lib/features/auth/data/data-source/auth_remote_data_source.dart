@@ -5,7 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flawle/core/network/dio_client.dart';
 import 'package:flawle/features/auth/data/data-source/auth_data_source.dart';
-import 'package:flawle/features/auth/data/model/userModel.dart';
+import 'package:flawle/features/auth/data/model/user_model.dart';
 
 class AuthRemoteDataSource implements AuthDataSource {
   final Dio _dio;
@@ -78,7 +78,7 @@ class AuthRemoteDataSource implements AuthDataSource {
       );
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
-        print("Validation Error: ${e.response?.data}");
+        log("Validation Error: ${e.response?.data}");
       }
       rethrow;
     } catch (e, st) {

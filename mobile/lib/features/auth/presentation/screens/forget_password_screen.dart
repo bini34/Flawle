@@ -58,7 +58,7 @@ class ForgetPasswordScreen extends HookConsumerWidget {
             Text(
               'Enter the email associated with your account and we\'ll send you a verification code.',
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.textTheme.bodyMedium?.color?.withOpacity(.7),
+                color: theme.textTheme.bodyMedium?.color?.withValues(alpha: .7),
               ),
             ),
             const SizedBox(height: 24),

@@ -1,20 +1,20 @@
 import 'package:flawle/core/configs/router-config/route_names.dart';
 import 'package:flawle/features/ai_assistant/presentation/screens/ai_chat_screen.dart';
-import 'package:flawle/features/auth/presentation/screens/verifficationScreen.dart';
+import 'package:flawle/features/auth/presentation/screens/verification_screen.dart';
 import 'package:flawle/features/auth/presentation/screens/forget_password_screen.dart';
 import 'package:flawle/features/auth/presentation/screens/password_reset_verification_screen.dart';
 import 'package:flawle/features/auth/presentation/screens/reset_password_screen.dart';
-import 'package:flawle/features/cart/presentation/screens/cartScreen.dart';
-import 'package:flawle/features/auth/presentation/screens/signInScreen.dart';
-import 'package:flawle/features/auth/presentation/screens/signUpScreen.dart';
+import 'package:flawle/features/cart/presentation/screens/cart_screen.dart';
+import 'package:flawle/features/auth/presentation/screens/sign_in_screen.dart';
+import 'package:flawle/features/auth/presentation/screens/sign_up_screen.dart';
 import 'package:flawle/features/main_screen.dart';
 import 'package:flawle/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:flawle/features/products/presentation/screens/product_catalog_screen.dart';
 import 'package:flawle/features/products/presentation/screens/product_detail.dart';
-import 'package:flawle/features/products/presentation/screens/product_list_screen.dart';
+import 'package:flawle/features/products/presentation/screens/home_screen.dart';
 import 'package:flawle/features/products/presentation/screens/product_search_screen.dart';
 import 'package:flawle/features/products/presentation/screens/product_search_result_page.dart';
-import 'package:flawle/features/profile/presentation/screens/profileScreen.dart';
+import 'package:flawle/features/profile/presentation/screens/profile_screen.dart';
 import 'package:go_router/go_router.dart';
 // import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter/material.dart';
@@ -112,7 +112,7 @@ final routeProvider = Provider((ref) {
               GoRoute(
                 name: RouteNames.productList,
                 path: RoutePaths.productList,
-                builder: (context, state) => const ProductListScreen(),
+                builder: (context, state) => const HomeScreen(),
               ),
             ],
           ),

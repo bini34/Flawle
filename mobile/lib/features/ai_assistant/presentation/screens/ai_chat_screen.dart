@@ -66,7 +66,7 @@ class _MessageBubble extends StatelessWidget {
     final isAssistant = message.fromAssistant;
     final bubbleColor = isAssistant
         ? Colors.grey.shade200
-        : Theme.of(context).colorScheme.primary.withOpacity(.10);
+        : Theme.of(context).colorScheme.primary.withValues(alpha: .10);
     final align = isAssistant
         ? CrossAxisAlignment.start
         : CrossAxisAlignment.end;
@@ -162,7 +162,7 @@ class _InputBar extends StatelessWidget {
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(.05),
+                      color: Colors.black.withValues(alpha: .05),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),

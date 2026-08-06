@@ -101,14 +101,9 @@ class _UnderlineBar extends ConsumerWidget {
 }
 
 class _BadgeIcon extends ConsumerWidget {
-  const _BadgeIcon({
-    required this.icon,
-    required this.label,
-    this.backgroundColor = Colors.black,
-  });
+  const _BadgeIcon({required this.icon, required this.label});
   final Widget icon;
   final String label;
-  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -121,8 +116,8 @@ class _BadgeIcon extends ConsumerWidget {
           top: -4,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-            decoration: BoxDecoration(
-              color: backgroundColor,
+            decoration: const BoxDecoration(
+              color: Colors.black,
               shape: BoxShape.circle,
             ),
             constraints: const BoxConstraints(minWidth: 16, minHeight: 16),

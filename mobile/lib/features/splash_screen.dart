@@ -10,14 +10,13 @@ class SplashScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isMounted = useIsMounted();
     useEffect(() {
       // Immediately attempt to get current user; keep a short splash delay.
       Future.wait([
         Future.delayed(const Duration(milliseconds: 1200)),
         ref.read(authProvider.notifier).getCurrentUser(),
       ]).then((values) {
-        if (!isMounted()) return;
+        if (!context.mounted) return;
         final user = values[1];
         if (user != null) {
           context.goNamed(RouteNames.productList);

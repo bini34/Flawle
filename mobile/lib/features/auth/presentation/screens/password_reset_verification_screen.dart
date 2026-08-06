@@ -42,8 +42,9 @@ class PasswordResetVerificationScreen extends HookConsumerWidget {
         if (chars.length >= length) FocusScope.of(context).unfocus();
         return;
       }
-      if (value.isNotEmpty && index < length - 1)
+      if (value.isNotEmpty && index < length - 1) {
         focuses[index + 1].requestFocus();
+      }
       if (value.isEmpty && index > 0) focuses[index - 1].requestFocus();
     }
 
@@ -52,7 +53,7 @@ class PasswordResetVerificationScreen extends HookConsumerWidget {
       final isFocused = focuses[index].hasFocus;
       final borderColor = (isFocused || hasText)
           ? primary
-          : theme.dividerColor.withOpacity(0.6);
+          : theme.dividerColor.withValues(alpha: 0.6);
       return SizedBox(
         width: 45,
         child: TextField(

@@ -1,7 +1,7 @@
 // features/auth/data/data-source/auth_data_source.dart
 import 'package:dartz/dartz.dart';
 import 'package:flawle/features/auth/data/data-source/auth_remote_data_source.dart';
-import 'package:flawle/features/auth/data/model/userModel.dart';
+import 'package:flawle/features/auth/data/model/user_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'auth_data_source.g.dart';
 

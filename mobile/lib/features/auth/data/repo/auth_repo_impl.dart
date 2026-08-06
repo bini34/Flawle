@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:flawle/features/auth/data/data-source/auth_data_source.dart';
-import 'package:flawle/features/auth/data/model/userModel.dart';
+import 'package:flawle/features/auth/data/model/user_model.dart';
 import 'package:flawle/features/auth/data/data-source/auth_local_data_source.dart';
 import 'package:flawle/features/auth/domain/entities/user.dart';
 import 'package:flawle/features/auth/domain/repositories/auth_repo.dart';
@@ -33,7 +33,7 @@ class AuthRepoImpl implements AuthRepo {
 
   @override
   Future<Either<String, User>> signUp(User user) async {
-    print('Signing up user: $user');
+    log('Signing up user: $user');
     final userModel = user.toModel(); // ← requires extension (see below)
     final result = await _dataSource.signUp(userModel);
     return result.map((model) => model.toDomain());
