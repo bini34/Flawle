@@ -16,5 +16,11 @@ class Migration(migrations.Migration):
             DROP CONSTRAINT IF EXISTS products_compare_price_gte_price;
             """,
             reverse_sql=migrations.RunSQL.noop,
+            state_operations=[
+                migrations.RemoveConstraint(
+                    model_name='product',
+                    name='products_compare_price_gte_price',
+                ),
+            ],
         ),
     ]

@@ -14,6 +14,7 @@ class TimeStampedModel(models.Model):
         abstract = True
 
 class Brand(TimeStampedModel):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
 
@@ -30,6 +31,7 @@ class Brand(TimeStampedModel):
         return self.name
 
 class Category(TimeStampedModel):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     parent = models.ForeignKey(
         "self", null=True, blank=True, on_delete=models.CASCADE, related_name="children"
@@ -64,6 +66,7 @@ class Product(TimeStampedModel):
         (STATUS_INACTIVE, "Inactive"),
         (STATUS_OUT_OF_STOCK, "Out of stock"),
     ]
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     title = models.CharField(max_length=255)
     sku = models.CharField(max_length=64, unique=True)
@@ -73,21 +76,13 @@ class Product(TimeStampedModel):
     short_description = models.TextField(blank=True)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
-    compare_at_price = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        null=True,
-        blank=True,
-        validators=[MinValueValidator(0)],
-    )
-    currency = models.CharField(max_length=3, default="USD")
+
+    currency = models.CharField(max_length=3, default="ETB")
     category = models.ForeignKey(
         Category, on_delete=models.PROTECT, related_name="products"
     )
     stock_qty = models.PositiveIntegerField(default=0)
-    is_featured = models.BooleanField(default=False)
     published_at = models.DateTimeField(null=True, blank=True)
-    metadata = models.JSONField(default=dict, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_ACTIVE)
 
   
@@ -100,16 +95,7 @@ class Product(TimeStampedModel):
             models.Index(fields=["status"]),
         ]
         ordering = ["-created_at"]
-        constraints = [
-            models.CheckConstraint(
-                name="products_compare_price_gte_price",
-                check=(
-                    models.Q(compare_at_price__gte=models.F("price"))
-                    | models.Q(compare_at_price__isnull=True)
-                ),
-            )
-        ]
-
+      
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
@@ -134,12 +120,12 @@ class Product(TimeStampedModel):
 
 
 class ProductVariant(TimeStampedModel):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variants")
     name = models.CharField(max_length=50)  # e.g., 30ml, 100ml
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, validators=[MinValueValidator(0)])
     stock_qty = models.PositiveIntegerField(default=0)
     sku = models.CharField(max_length=100, unique=True)
-    image_url = models.URLField(blank=True)
 
     class Meta:
         ordering = ["id"]
@@ -150,6 +136,7 @@ class ProductVariant(TimeStampedModel):
 
 
 class ProductImage(TimeStampedModel):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
     image = models.ImageField(upload_to="product_images/")  # This saves file
     position = models.PositiveIntegerField(default=0)
@@ -163,6 +150,7 @@ class ProductImage(TimeStampedModel):
 
 
 class ProductDetail(TimeStampedModel):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     TYPE_DESCRIPTION = "description"
     TYPE_INGREDIENTS = "ingredients"
     TYPE_HOW_TO_USE = "how_to_use"

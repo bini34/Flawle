@@ -1,4 +1,5 @@
-# serializers.py
+import uuid
+
 from rest_framework import serializers
 from .models import Brand, Category, Product, ProductDetail, ProductImage, ProductVariant
 
@@ -38,7 +39,7 @@ class CategorySummarySerializer(serializers.ModelSerializer):
 class ProductVariantSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductVariant
-        fields = ("id", "name", "price", "stock_qty", "sku", "image_url")
+        fields = ("id", "name", "price", "stock_qty", "sku")
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):
@@ -49,8 +50,8 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
 # FIXED & UPGRADED: Now works with ImageField
 class ProductImageSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(write_only=True, required=False)           # Accept uploaded file
-    image_url = serializers.SerializerMethodField(read_only=True)            # Return full URL
+    image = serializers.ImageField(write_only=True, required=False)           # Accept uploaded file via JSON payloads
+    image_url = serializers.SerializerMethodField(read_only=True)            # Return full URL for responses
 
     class Meta:
         model = ProductImage
@@ -68,25 +69,51 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 # MAIN PRODUCT SERIALIZER — FULLY UPDATED
 class ProductSerializer(serializers.ModelSerializer):
-    brand = BrandSummarySerializer(read_only=True)
     brand_id = serializers.PrimaryKeyRelatedField(
-        queryset=Brand.objects.all(), source="brand", write_only=True, allow_null=True, required=False
+        queryset=Brand.objects.all(), source="brand", allow_null=True, required=False
     )
-    category = CategorySummarySerializer(read_only=True)
     category_id = serializers.PrimaryKeyRelatedField(
-        queryset=Category.objects.all(), source="category", write_only=True, required=True
+        queryset=Category.objects.all(), source="category", required=True
     )
 
-    images = ProductImageSerializer(many=True, required=False)
+    images = ProductImageSerializer(many=True, read_only=True)
+    image_files = serializers.ListField(
+        child=serializers.ImageField(),
+        write_only=True,
+        required=False,
+        allow_empty=True,
+        help_text="Upload one or multiple product images via multipart/form-data.",
+    )
     details = ProductDetailSerializer(many=True, required=False)
     variants = ProductVariantSerializer(many=True, required=False)
 
     class Meta:
         model = Product
-        fields = "__all__"
+        fields = (
+            "id",
+            "title",
+            "slug",
+            "sku",
+            "brand_id",
+            "category_id",
+            "short_description",
+            "description",
+            "price",
+            "currency",
+            "stock_qty",
+            "status",
+            "published_at",
+            "details",
+            "variants",
+            "images",
+            "image_files",
+            "created_at",
+            "updated_at",
+        )
         read_only_fields = ("slug", "sku", "status", "published_at", "created_at", "updated_at")
 
     def create(self, validated_data):
+        image_files = validated_data.pop("image_files", [])
         images_data = validated_data.pop("images", [])
         details_data = validated_data.pop("details", [])
         variants_data = validated_data.pop("variants", [])
@@ -97,6 +124,8 @@ class ProductSerializer(serializers.ModelSerializer):
 
         product = Product.objects.create(**validated_data)
 
+        for position, uploaded in enumerate(image_files):
+            ProductImage.objects.create(product=product, image=uploaded, position=position)
         for img in images_data:
             ProductImage.objects.create(product=product, **img)
         for detail in details_data:
@@ -109,6 +138,7 @@ class ProductSerializer(serializers.ModelSerializer):
         return product
 
     def update(self, instance, validated_data):
+        image_files = validated_data.pop("image_files", None)
         images_data = validated_data.pop("images", None)
         details_data = validated_data.pop("details", None)
         variants_data = validated_data.pop("variants", None)
@@ -118,7 +148,11 @@ class ProductSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
         instance.save()
 
-        if images_data is not None:
+        if image_files is not None:
+            instance.images.all().delete()
+            for position, uploaded in enumerate(image_files):
+                ProductImage.objects.create(product=instance, image=uploaded, position=position)
+        elif images_data is not None:
             instance.images.all().delete()
             for img in images_data:
                 ProductImage.objects.create(product=instance, **img)

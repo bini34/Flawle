@@ -73,7 +73,7 @@ class User(AbstractUser):
         validators=[phone_regex],
         max_length=10,
         blank=False,
-        null=False,
+        null=True,
         unique=True
     )
 

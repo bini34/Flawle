@@ -1,5 +1,6 @@
 # views.py
 from rest_framework import viewsets, filters
+from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
@@ -19,6 +20,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         .order_by("-created_at")
 
     serializer_class = ProductSerializer
+    parser_classes = (MultiPartParser, FormParser, JSONParser)
     lookup_field = "id"
 
     # Filters, Search, Ordering
@@ -44,7 +46,6 @@ class ProductViewSet(viewsets.ModelViewSet):
         "category__parent__slug": ["exact"],  # e.g., ?category__parent__slug=beauty
         "price": ["gte", "lte", "exact"],
         "stock_qty": ["gt", "gte"],
-        "is_featured": ["exact"],
         "status": ["exact"],
     }
 

@@ -10,10 +10,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveConstraint(
-            model_name='product',
-            name='products_compare_price_gte_price',
-        ),
         migrations.RemoveField(
             model_name='productvariant',
             name='image_url',
