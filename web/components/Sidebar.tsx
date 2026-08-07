@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -141,7 +142,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               ? 'bg-lime-50 dark:bg-lime-900/20 ring-1 ring-lime-200 dark:ring-lime-800'
               : 'hover:bg-neutral-50 dark:hover:bg-neutral-800 border border-transparent'
           }`}>
-            <img src={CURRENT_USER.avatarUrl} alt="Profile" className="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-neutral-700 shadow-sm flex-shrink-0" />
+            <Image src={CURRENT_USER.avatarUrl ?? ''} alt="Profile" width={40} height={40} className="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-neutral-700 shadow-sm flex-shrink-0" />
             <div className="flex-1 min-w-0 md:hidden lg:block">
               <p className="text-sm font-bold text-neutral-900 dark:text-white truncate">{CURRENT_USER.name}</p>
               <p className="text-xs text-neutral-500 dark:text-neutral-400 truncate font-medium">{CURRENT_USER.role}</p>
@@ -173,7 +174,7 @@ export const MobileHeader = ({ onMenuClick }: { onMenuClick: () => void }) => {
           {isDarkMode ? <Sun size={22} /> : <Moon size={22} />}
         </button>
         <Link href="/profile">
-          <img src={CURRENT_USER.avatarUrl} alt="Profile" className="w-9 h-9 rounded-full ring-2 ring-lime-100 dark:ring-lime-900" />
+          <Image src={CURRENT_USER.avatarUrl ?? ''} alt="Profile" width={36} height={36} className="w-9 h-9 rounded-full ring-2 ring-lime-100 dark:ring-lime-900" />
         </Link>
       </div>
     </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { MOCK_ORDERS, MOCK_PRODUCTS } from '@/constants';
 import { Order, OrderStatus } from '@/types';
@@ -168,7 +169,7 @@ const Orders = () => {
                     <td className="px-8 py-5 font-bold text-neutral-900 dark:text-white">{order.id}</td>
                     <td className="px-8 py-5">
                       <div className="flex items-center gap-4">
-                        <img src={order.customerAvatar} alt="" className="w-10 h-10 rounded-full object-cover" />
+                        <Image src={order.customerAvatar} alt="" width={40} height={40} className="w-10 h-10 rounded-full object-cover" />
                         <div>
                           <p className="text-neutral-900 dark:text-white font-bold">{order.customerName}</p>
                           <p className="text-xs text-neutral-400 font-medium">{order.customerEmail}</p>

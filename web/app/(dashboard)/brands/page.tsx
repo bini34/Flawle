@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { MOCK_BRANDS, CURRENT_USER } from '@/constants';
 import { Brand, UserRole } from '@/types';
 import { Search, Plus, Edit3, Trash2, X, UploadCloud, ShieldAlert } from 'lucide-react';
@@ -128,7 +129,7 @@ const Brands = () => {
                     <td className="px-8 py-5">
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-white dark:bg-neutral-700 rounded-xl border border-neutral-100 dark:border-neutral-600 p-2 flex items-center justify-center">
-                           <img src={brand.logoUrl} alt={brand.name} className="w-full h-full object-contain" onError={(e) => (e.currentTarget.src = 'https://via.placeholder.com/40')} />
+                           <Image src={brand.logoUrl} alt={brand.name} width={40} height={40} className="w-full h-full object-contain" />
                         </div>
                         <div>
                           <p className="text-neutral-900 dark:text-white font-bold">{brand.name}</p>

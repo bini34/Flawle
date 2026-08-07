@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { MOCK_ORDERS } from '@/constants';
@@ -196,7 +197,7 @@ const OrderDetails = () => {
            <div className="bg-white dark:bg-neutral-800 rounded-3xl border border-neutral-100 dark:border-neutral-700 shadow-sm p-8 transition-all">
               <h2 className="text-xs font-extrabold text-neutral-400 uppercase tracking-widest mb-6">Customer Info</h2>
               <div className="flex items-center gap-4 mb-8">
-                 <img src={order.customerAvatar} alt="" className="w-14 h-14 rounded-full ring-4 ring-neutral-50 dark:ring-neutral-700" />
+                 <Image src={order.customerAvatar} alt="" width={56} height={56} className="w-14 h-14 rounded-full ring-4 ring-neutral-50 dark:ring-neutral-700" />
                  <div>
                     <p className="font-bold text-neutral-900 dark:text-white text-lg">{order.customerName}</p>
                     <p className="text-xs text-neutral-500 dark:text-neutral-400 font-medium">Customer since 2023</p>

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { Plus, Filter, Edit3, Trash2, Sparkles, UploadCloud, X, ChevronLeft, ChevronRight, CheckSquare, Trash } from 'lucide-react';
 import { MOCK_PRODUCTS } from '@/constants';
 import { Product, ProductStatus } from '@/types';
@@ -246,7 +247,7 @@ const Products = () => {
                     </td>
                     <td className="px-4 py-5">
                       <div className="flex items-center gap-4">
-                        <img src={product.imageUrl} alt="" className="w-12 h-12 rounded-xl object-cover border border-neutral-100 dark:border-neutral-700 shadow-sm" />
+                        <Image src={product.imageUrl} alt="" width={48} height={48} className="w-12 h-12 rounded-xl object-cover border border-neutral-100 dark:border-neutral-700 shadow-sm" />
                         <div>
                           <p className="text-neutral-900 dark:text-white font-bold">{product.name}</p>
                           <p className="text-xs text-neutral-400 font-medium">{product.id}</p>

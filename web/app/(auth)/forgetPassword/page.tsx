@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useRef } from 'react';
 import { Lock, Mail, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import Link from 'next/link';
@@ -7,9 +8,26 @@ import Link from 'next/link';
 type Step = 'email' | 'otp' | 'password';
 
 export default function ForgotPassword() {
- 
+  const steps: Step[] = ['email', 'otp', 'password'];
+  const [step, setStep] = useState<Step>('email');
+  const [email, setEmail] = useState('');
+  const [otp, setOtp] = useState<string[]>(Array(6).fill(''));
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [error, setError] = useState('');
+  const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
 
+  const stepIndex = steps.indexOf(step);
 
+  function handleOtpChange(index: number, value: string) {
+    if (!/^\d?$/.test(value)) return;
+    const next = [...otp];
+    next[index] = value;
+    setOtp(next);
+    if (value && index < otp.length - 1) {
+      otpRefs.current[index + 1]?.focus();
+    }
+  }
 
   function handleOtpKeyDown(index: number, e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Backspace' && !otp[index] && index > 0) {
@@ -17,16 +35,32 @@ export default function ForgotPassword() {
     }
   }
 
+  function handleEmailSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError('');
+    if (!email) return setError('Please enter your email.');
+    setStep('otp');
+  }
 
+  function handleOtpSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError('');
+    if (otp.some((d) => !d)) return setError('Please enter all 6 digits.');
+    setStep('password');
+  }
 
-
- 
+  function handlePasswordSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError('');
+    if (password.length < 8) return setError('Password must be at least 8 characters.');
+    if (password !== confirm) return setError('Passwords do not match.');
+    // TODO: submit new password to API
+  }
 
   const inputClass = (hasError?: boolean) =>
     `w-full pl-12 pr-4 py-3 bg-neutral-50 dark:bg-neutral-700 border ${
       hasError ? 'border-red-500' : 'border-transparent'
     } focus:border-lime-500 rounded-xl text-sm focus:ring-4 focus:ring-lime-500/10 outline-none transition-all dark:text-white font-medium placeholder-neutral-400`;
-
 
   return (
     <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 flex items-center justify-center p-6 transition-colors duration-200">
@@ -57,7 +91,7 @@ export default function ForgotPassword() {
           {step === 'email' && (
             <>
               <h2 className="text-3xl font-extrabold text-neutral-900 dark:text-white tracking-tight">Forgot password?</h2>
-              <p className="text-neutral-500 dark:text-neutral-400 mt-2 text-sm font-medium">Enter your email and we'll send you a reset code.</p>
+              <p className="text-neutral-500 dark:text-neutral-400 mt-2 text-sm font-medium">Enter your email and we&apos;ll send you a reset code.</p>
             </>
           )}
           {step === 'otp' && (
@@ -129,7 +163,7 @@ export default function ForgotPassword() {
               Verify Code
             </button>
             <div className="text-center text-sm text-neutral-500 dark:text-neutral-400 font-medium">
-              Didn't receive it?{' '}
+              Didn&apos;t receive it?{' '}
               <button type="button" className="text-lime-600 dark:text-lime-400 font-bold hover:underline">
                 Resend code
               </button>

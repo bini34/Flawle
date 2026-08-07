@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { CURRENT_USER } from '@/constants';
 import { Camera, Lock, User, Mail, Save, LogOut } from 'lucide-react';
@@ -43,7 +44,7 @@ const Profile = () => {
          <div className="md:col-span-1 space-y-6">
             <div className="bg-white dark:bg-neutral-800 rounded-3xl border border-neutral-100 dark:border-neutral-700 shadow-sm p-8 flex flex-col items-center text-center transition-all">
                <div className="relative mb-6 group cursor-pointer">
-                  <img src={CURRENT_USER.avatarUrl} alt="" className="w-28 h-28 rounded-full object-cover ring-4 ring-neutral-50 dark:ring-neutral-700 shadow-md" />
+                  <Image src={CURRENT_USER.avatarUrl ?? ''} alt="" width={112} height={112} className="w-28 h-28 rounded-full object-cover ring-4 ring-neutral-50 dark:ring-neutral-700 shadow-md" />
                   <div className="absolute inset-0 bg-neutral-900/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all backdrop-blur-sm">
                      <Camera className="text-white" size={28} />
                   </div>

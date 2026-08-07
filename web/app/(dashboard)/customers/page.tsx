@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { MOCK_CUSTOMERS } from '@/constants';
 import { MoreHorizontal, Search, Mail, Phone, Filter } from 'lucide-react';
 import { useToast } from '@/components/Providers';
@@ -64,7 +65,7 @@ const Customers = () => {
                 <tr key={customer.id} className="hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors">
                   <td className="px-8 py-5">
                     <div className="flex items-center gap-4">
-                      <img src={customer.avatarUrl} alt="" className="w-10 h-10 rounded-full object-cover" />
+                      <Image src={customer.avatarUrl} alt="" width={40} height={40} className="w-10 h-10 rounded-full object-cover" />
                       <div>
                         <p className="text-neutral-900 dark:text-white font-bold">{customer.name}</p>
                         <p className="text-xs text-neutral-400 font-medium">ID: {customer.id}</p>
