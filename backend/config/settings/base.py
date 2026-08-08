@@ -138,6 +138,8 @@ if _database_url:
             conn_health_checks=True,
         )
     }
+    # psycopg2 doesn't understand pgbouncer=true — strip it
+    DATABASES['default'].get('OPTIONS', {}).pop('pgbouncer', None)
     # Required for Supabase pgbouncer (transaction pooling mode)
     DATABASES['default']['DISABLE_SERVER_SIDE_CURSORS'] = True
 else:
