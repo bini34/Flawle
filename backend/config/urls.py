@@ -10,8 +10,8 @@ from . import views
 
 schema_view = get_schema_view(
     openapi.Info(title="Flawel Api", default_version='v1'),
-    public=True,
-    permission_classes=(permissions.AllowAny,),
+    public=False,
+    permission_classes=(permissions.IsAdminUser,),
     authentication_classes=[SessionAuthentication, BasicAuthentication],
 )
 
@@ -27,9 +27,12 @@ urlpatterns = [
     # path('api/v1/notifications/', include('notifications.urls')),
     # path('api/v1/ai/', include('ai_assistant.urls')),
 
-    # Swagger
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+if settings.DEBUG:
+    urlpatterns += [
+        path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 if settings.DEBUG:
