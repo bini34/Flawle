@@ -72,6 +72,9 @@ REST_FRAMEWORK = {
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'unsafe-secret-key')
 DEBUG = env_bool(os.getenv('DEBUG', 'False'))
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+_render_host = os.getenv('RENDER_EXTERNAL_HOSTNAME')
+if _render_host:
+    ALLOWED_HOSTS.append(_render_host)
 ROOT_URLCONF = 'config.urls'
 WSGI_APPLICATION = 'config.wsgi.application'
 
@@ -115,12 +118,6 @@ SIMPLE_JWT = {
     'AUTH_COOKIE_SAME_SITE': 'Lax',    # CSRF protection
     'AUTH_COOKIE_PATH': '/',
 }
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    '172.31.195.138',   # ← THIS IS REQUIRED
-    '[::1]',
-]
 # CORS
 CORS_ALLOWED_ORIGINS = [
     'http://172.31.195.138',

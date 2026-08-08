@@ -16,7 +16,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path("health/", views.HealthCheckView.as_view(), name="health_check"),
+    path("healthz/", views.HealthCheckView.as_view(), name="health_check"),
  # Health check endpoint
     path('admin/', admin.site.urls),
     path('api/v1/users/', include('users.urls')),
