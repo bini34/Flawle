@@ -126,6 +126,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://172.31.195.138',
     "http://localhost:3000",  
     "http://127.0.0.1:3000",
+    "https://flawle.vercel.app",
 ]
 
 # Database
