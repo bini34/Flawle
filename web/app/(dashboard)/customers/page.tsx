@@ -1,44 +1,54 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import Image from 'next/image';
-import { MOCK_CUSTOMERS } from '@/constants';
-import { MoreHorizontal, Search, Mail, Phone, Filter } from 'lucide-react';
-import { useToast } from '@/components/Providers';
+import React, { useState } from "react";
+import Image from "next/image";
+import { MOCK_CUSTOMERS } from "@/constants";
+import { MoreHorizontal, Search, Mail, Phone, Filter } from "lucide-react";
+import { useToast } from "@/components/Providers";
 
 const Customers = () => {
   const { showToast } = useToast();
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   const filteredCustomers = MOCK_CUSTOMERS.filter(
-    c => c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-         c.email.toLowerCase().includes(searchTerm.toLowerCase())
+    (c) =>
+      c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
         <div>
-          <h1 className="text-3xl font-extrabold text-neutral-900 dark:text-white tracking-tight">Customers</h1>
-          <p className="text-neutral-500 dark:text-neutral-400 mt-2 font-medium">Manage your customer base and view their history.</p>
+          <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
+            Customers
+          </h1>
+          <p className="mt-2 font-medium text-neutral-500 dark:text-neutral-400">
+            Manage your customer base and view their history.
+          </p>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-neutral-800 p-5 rounded-3xl border border-neutral-100 dark:border-neutral-700 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center transition-all">
+      <div className="flex flex-col items-center justify-between gap-4 rounded-3xl border border-neutral-100 bg-white p-5 shadow-sm transition-all md:flex-row dark:border-neutral-700 dark:bg-neutral-800">
         <div className="relative w-full md:w-96">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
+          <Search
+            className="absolute top-1/2 left-4 -translate-y-1/2 text-neutral-400"
+            size={18}
+          />
           <input
             type="text"
             placeholder="Search customers..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-11 pr-4 py-3 bg-neutral-50 dark:bg-neutral-700 border border-transparent focus:border-lime-500 rounded-xl text-sm focus:outline-none focus:ring-4 focus:ring-lime-500/10 dark:text-neutral-200 placeholder-neutral-400 font-medium transition-all"
+            className="w-full rounded-xl border border-transparent bg-neutral-50 py-3 pr-4 pl-11 text-sm font-medium placeholder-neutral-400 transition-all focus:border-lime-500 focus:ring-4 focus:ring-lime-500/10 focus:outline-none dark:bg-neutral-700 dark:text-neutral-200"
           />
         </div>
-        <div className="flex gap-3 w-full md:w-auto">
+        <div className="flex w-full gap-3 md:w-auto">
           <button
-             onClick={() => showToast('Advanced filters feature coming soon!', 'success')}
-             className="px-5 py-3 border border-neutral-200 dark:border-neutral-700 rounded-xl text-sm font-bold text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-700 flex items-center gap-2 transition-colors"
+            onClick={() =>
+              showToast("Advanced filters feature coming soon!", "success")
+            }
+            className="flex items-center gap-2 rounded-xl border border-neutral-200 px-5 py-3 text-sm font-bold text-neutral-600 transition-colors hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700"
           >
             <Filter size={16} />
             Filters
@@ -46,10 +56,10 @@ const Customers = () => {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-neutral-800 rounded-3xl border border-neutral-100 dark:border-neutral-700 shadow-sm overflow-hidden transition-all">
+      <div className="overflow-hidden rounded-3xl border border-neutral-100 bg-white shadow-sm transition-all dark:border-neutral-700 dark:bg-neutral-800">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-neutral-500 dark:text-neutral-400">
-            <thead className="bg-neutral-50 dark:bg-neutral-800 text-xs uppercase text-neutral-400 font-bold tracking-wider">
+            <thead className="bg-neutral-50 text-xs font-bold tracking-wider text-neutral-400 uppercase dark:bg-neutral-800">
               <tr>
                 <th className="px-8 py-5">Customer Name</th>
                 <th className="px-8 py-5">Contact Info</th>
@@ -62,39 +72,57 @@ const Customers = () => {
             </thead>
             <tbody className="divide-y divide-neutral-100 dark:divide-neutral-700">
               {filteredCustomers.map((customer) => (
-                <tr key={customer.id} className="hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors">
+                <tr
+                  key={customer.id}
+                  className="transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-700/50"
+                >
                   <td className="px-8 py-5">
                     <div className="flex items-center gap-4">
-                      <Image src={customer.avatarUrl} alt="" width={40} height={40} className="w-10 h-10 rounded-full object-cover" />
+                      <Image
+                        src={customer.avatarUrl}
+                        alt=""
+                        width={40}
+                        height={40}
+                        className="h-10 w-10 rounded-full object-cover"
+                      />
                       <div>
-                        <p className="text-neutral-900 dark:text-white font-bold">{customer.name}</p>
-                        <p className="text-xs text-neutral-400 font-medium">ID: {customer.id}</p>
+                        <p className="font-bold text-neutral-900 dark:text-white">
+                          {customer.name}
+                        </p>
+                        <p className="text-xs font-medium text-neutral-400">
+                          ID: {customer.id}
+                        </p>
                       </div>
                     </div>
                   </td>
                   <td className="px-8 py-5">
                     <div className="flex flex-col gap-1">
-                       <div className="flex items-center gap-2 text-xs font-medium text-neutral-600 dark:text-neutral-300">
-                         <Mail size={14} className="text-neutral-400" />
-                         {customer.email}
-                       </div>
-                       <div className="flex items-center gap-2 text-xs font-medium text-neutral-600 dark:text-neutral-300">
-                         <Phone size={14} className="text-neutral-400" />
-                         {customer.phone}
-                       </div>
+                      <div className="flex items-center gap-2 text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                        <Mail size={14} className="text-neutral-400" />
+                        {customer.email}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                        <Phone size={14} className="text-neutral-400" />
+                        {customer.phone}
+                      </div>
                     </div>
                   </td>
-                  <td className="px-8 py-5 font-bold text-neutral-900 dark:text-white">{customer.totalOrders}</td>
-                  <td className="px-8 py-5 font-bold text-neutral-900 dark:text-white">${customer.totalSpent.toLocaleString()}</td>
+                  <td className="px-8 py-5 font-bold text-neutral-900 dark:text-white">
+                    {customer.totalOrders}
+                  </td>
+                  <td className="px-8 py-5 font-bold text-neutral-900 dark:text-white">
+                    ${customer.totalSpent.toLocaleString()}
+                  </td>
                   <td className="px-8 py-5 font-medium">{customer.joinDate}</td>
                   <td className="px-8 py-5">
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold
-                      ${customer.status === 'Active' ? 'bg-lime-100 text-lime-700 dark:bg-lime-900/40 dark:text-lime-400' : 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400'}`}>
+                    <span
+                      className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold ${customer.status === "Active" ? "bg-lime-100 text-lime-700 dark:bg-lime-900/40 dark:text-lime-400" : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400"}`}
+                    >
                       {customer.status}
                     </span>
                   </td>
                   <td className="px-8 py-5 text-right">
-                    <button className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg text-neutral-500 dark:text-neutral-400 transition-colors">
+                    <button className="rounded-lg p-2 text-neutral-500 transition-colors hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-700">
                       <MoreHorizontal size={18} />
                     </button>
                   </td>
