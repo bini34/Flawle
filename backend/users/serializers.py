@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from users.services.verification_service import VerificationService
 from .models import User
+from users.services.verification_service import VerificationService
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
@@ -48,7 +49,6 @@ class verifyOTPSerializer(serializers.Serializer):
         except User.DoesNotExist:
             raise serializers.ValidationError("Invalid email or already verified")
 
-        from users.services.verification_service import VerificationService
         result = VerificationService.verify_otp(email, otp_input)
         if not result.success:
             raise serializers.ValidationError(result.message)
@@ -68,3 +68,51 @@ class ResendOTPSerializer(serializers.Serializer):
 
 class LogoutSerializer(serializers.Serializer):
        refresh = serializers.CharField(help_text="Refresh token to blacklist")
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            "id", "email", "first_name", "last_name",
+            "phone", "role", "is_verified",
+        )
+        read_only_fields = fields
+
+class VerifyResetOTPSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    otp = serializers.CharField(max_length=6, min_length=6)
+
+    def validate(self, data):
+        email = data['email'].lower()
+        otp_input = data['otp'].strip()
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("Invalid email")
+
+        result = VerificationService.verify_reset_otp(user, otp_input)
+        if not result.success:
+            raise serializers.ValidationError(result.message)
+        data['user'] = result.payload['user']
+        return data
+
+
+class SetNewPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    new_password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+
+    def validate(self, data):
+        email = data['email'].lower()
+        new_password = data['new_password']
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("Invalid email")
+
+        # Here you can add additional checks if needed (e.g., if the user has verified the OTP)
+        user.set_password(new_password)
+        user.save()
+        return data    
