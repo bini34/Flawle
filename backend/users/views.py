@@ -4,10 +4,14 @@ from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from users.services.verification_service import VerificationService
+
 from .serializers import (
     LoginSerializer,
     RegisterSerializer,
     LogoutSerializer,
+    UserProfileSerializer,
+    VerifyResetOTPSerializer,
     verifyOTPSerializer,
     ResendOTPSerializer,
 )
@@ -61,16 +65,7 @@ class LoginView(generics.GenericAPIView):
         refresh = RefreshToken.for_user(user)
 
         response = Response({
-            "message": "Login successful",
-            "user": {
-                "id": user.id,
-                "email": user.email,
-                "first_name": user.first_name,
-                "last_name": user.last_name,
-                "phone": user.phone,
-                "role": user.role,
-                "is_verified": user.is_verified,
-            }
+            "message": "Login successful",           
         })
 
         response.set_cookie('access', str(refresh.access_token), httponly=True, secure=True, samesite='Lax', max_age=3600)
@@ -108,19 +103,9 @@ class VerifyOTPView(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data.get('user')
         return Response({
-            "message": "Email verified successfully.",
-            "user": {
-                "id": user.id,
-                "email": user.email,
-                "first_name": user.first_name,
-                "last_name": user.last_name,
-                "phone": user.phone,
-                "role": user.role,
-                "is_verified": user.is_verified,
-            }
-        }, status=status.HTTP_200_OK)
+            "message": "Email verified successfully."
+                   }, status=status.HTTP_200_OK)
 
 
 class ResendOTPView(generics.GenericAPIView):
@@ -131,3 +116,43 @@ class ResendOTPView(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response({"message": "OTP resent if eligible"}, status=status.HTTP_200_OK)
+
+class UserProfileView(generics.RetrieveAPIView):
+    serializer_class = UserProfileSerializer  # Reuse the UserProfileSerializer for user profile
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user    
+
+
+class RequestPasswordResetView(generics.GenericAPIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email', '').strip().lower()
+        if not email:
+            return Response({"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        result = VerificationService.request_password_reset(email)
+        if not result.success:
+            return Response({"error": result.message}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"message": "Password reset OTP sent if eligible"}, status=status.HTTP_200_OK)
+
+class VerifyResetOTPView(generics.GenericAPIView):
+    serializer_class = VerifyResetOTPSerializer
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response({"message": "Password reset OTP verified successfully."}, status=status.HTTP_200_OK)
+
+class SetNewPasswordView(generics.GenericAPIView):
+    serializer_class = SetNewPasswordSerializer
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response({"message": "Password reset successfully."}, status=status.HTTP_200_OK)    

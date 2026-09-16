@@ -100,3 +100,27 @@ class VerificationService:
         send_verification_email(user.email, otp)
         update_resend_state(user_id, cooldown_seconds=RESEND_COOLDOWN_SECONDS)
         return VerificationResult(True, "OTP resent")
+
+    @staticmethod
+    def request_password_reset(email: str) -> VerificationResult:
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return VerificationResult(True, "Password reset OTP sent if eligible")
+
+        otp = generate_otp()
+        set_otp_for_user(user, otp, timeout=OTP_TTL_SECONDS)
+        send_verification_email(user.email, otp)
+        return VerificationResult(True, "Password reset OTP sent")
+
+    def verify_reset_otp(user: User, otp: str) -> VerificationResult:
+        
+        stored = get_otp_for_user(user)
+        if not stored:
+            return VerificationResult(False, "OTP expired or invalid")
+
+        if otp != stored:
+            return VerificationResult(False, "Invalid OTP")
+
+        delete_otp_for_user(user)
+        return VerificationResult(True, "Password reset OTP verified", payload={"user": user})

@@ -1,21 +1,20 @@
-
 export enum UserRole {
-  SUPER_ADMIN = 'Super Admin',
-  STAFF = 'Staff',
+  SUPER_ADMIN = "Super Admin",
+  STAFF = "Staff",
 }
 
 export enum OrderStatus {
-  PENDING = 'Pending',
-  ACCEPTED = 'Accepted',
-  COMPLETED = 'Completed',
-  REJECTED = 'Rejected',
-  CANCELLED = 'Cancelled',
+  PENDING = "Pending",
+  ACCEPTED = "Accepted",
+  COMPLETED = "Completed",
+  REJECTED = "Rejected",
+  CANCELLED = "Cancelled",
 }
 
 export enum ProductStatus {
-  ACTIVE = 'Active',
-  DRAFT = 'Draft',
-  ARCHIVED = 'Archived',
+  ACTIVE = "Active",
+  DRAFT = "Draft",
+  ARCHIVED = "Archived",
 }
 
 export interface User {
@@ -24,7 +23,7 @@ export interface User {
   email: string;
   role: UserRole;
   avatarUrl?: string;
-  status: 'Active' | 'Inactive';
+  status: "Active" | "Inactive";
   lastActive?: string;
 }
 
@@ -41,7 +40,7 @@ export interface Brand {
   name: string;
   logoUrl: string;
   productsCount: number;
-  status: 'Active' | 'Inactive';
+  status: "Active" | "Inactive";
   description?: string;
 }
 
@@ -82,7 +81,7 @@ export interface Customer {
   avatarUrl: string;
   totalOrders: number;
   totalSpent: number;
-  status: 'Active' | 'Blocked';
+  status: "Active" | "Blocked";
   joinDate: string;
 }
 
