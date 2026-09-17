@@ -1,3 +1,4 @@
+import AuthCardBorder from "@/components/auth/AuthCardBorder";
 // app/forgot-password/page.tsx — no "use client"
 import RequestPasswordResetForm from "@/components/auth/RequestPasswordResetForm";
 import VerifyResetOtpForm from "@/components/auth/VerifyResetOtpForm";
@@ -18,7 +19,8 @@ export default async function ForgotPassword({
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-neutral-50 p-6 dark:bg-neutral-900">
-      <section className="w-full max-w-md rounded-3xl border border-neutral-100 bg-white p-8 shadow-xl dark:border-neutral-700 dark:bg-neutral-800">
+      <section className="relative w-full max-w-md overflow-hidden rounded-3xl border border-neutral-100 bg-white p-8 shadow-xl dark:border-neutral-700 dark:bg-neutral-800">
+        <AuthCardBorder />
         <div className="mb-15">
           <p className="mb-4 text-sm font-medium text-neutral-500">
             Step {stepIndex + 1} of 3
