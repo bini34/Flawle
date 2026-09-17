@@ -10,6 +10,7 @@ from .serializers import (
     LoginSerializer,
     RegisterSerializer,
     LogoutSerializer,
+    SetNewPasswordSerializer,
     UserProfileSerializer,
     VerifyResetOTPSerializer,
     verifyOTPSerializer,
