@@ -1,5 +1,9 @@
 "use server";
-import login, { RequestPasswordReset, setNewPassword, verifyResetOtp } from "./api";
+import login, {
+  RequestPasswordReset,
+  setNewPassword,
+  verifyResetOtp,
+} from "./api";
 import { authSchema, emailSchema, newPasswordSchema } from "./schemas";
 import { logout, type AuthUser } from "./authslice";
 import { redirect } from "next/navigation";
@@ -15,8 +19,6 @@ interface RequestPasswordResetState {
   success: boolean;
   errors: { email?: string[] };
 }
-
-
 
 export async function authenticateAction(
   previousState: unknown,
@@ -43,7 +45,7 @@ export async function authenticateAction(
       user: null,
     };
   }
-  redirect("/");
+  return { success: true, errors: {}, user: null };
 }
 
 export async function logoutAction() {
@@ -76,7 +78,7 @@ export async function RequestPasswordResetAction(
       errors: { email: validation.error.issues.map((issue) => issue.message) },
     };
   }
-  console.log("RequestPasswordResetAction called with email:", validation.data); 
+  console.log("RequestPasswordResetAction called with email:", validation.data);
   try {
     await RequestPasswordReset(validation.data);
   } catch {
@@ -91,30 +93,37 @@ export async function RequestPasswordResetAction(
     sameSite: "lax",
     path: "/",
     maxAge: 600,
-});
+  });
 
-  redirect("/forgot-password?step=otp")
+  redirect("/forgot-password?step=otp");
 }
-
 
 export async function verifyResetOtpAction(
   previousState: unknown,
   formData: FormData
 ): Promise<{ success: boolean; errors: { otp?: string[] } }> {
   const otp = Array.from({ length: 6 }, (_, index) =>
-        formData.get(`otp${index}`),
-      ).join("");
+    formData.get(`otp${index}`)
+  ).join("");
   const cookieStore = await cookies();
   const email = cookieStore.get("reset_email")?.value; // Use the stored email from the previous step
 
+  if (!email) {
+    return {
+      success: false,
+      errors: {
+        otp: ["Your reset session has expired. Request a new reset code."],
+      },
+    };
+  }
   if (!/^\d{6}$/.test(otp)) {
-        return {
-          success: false,
-          errors: {
-            otp: ["Enter a valid 6-digit verification code."],
-          },
-        };
-      }
+    return {
+      success: false,
+      errors: {
+        otp: ["Enter a valid 6-digit verification code."],
+      },
+    };
+  }
 
   try {
     await verifyResetOtp(email, otp.toString());
@@ -131,26 +140,43 @@ export async function verifyResetOtpAction(
 export async function setNewPasswordAction(
   previousState: unknown,
   formData: FormData
-): Promise<{ success: boolean; errors: { newPassword?: string[]; confirmPassword?: string[] } }> {
+): Promise<{
+  success: boolean;
+  errors: { newPassword?: string[]; confirmPassword?: string[] };
+}> {
   const newPassword = formData.get("newPassword") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
   const cookieStore = await cookies();
-  const email = cookieStore.get("reset_email")?.value; 
-  
-  const validation = newPasswordSchema.safeParse({ newPassword, confirmPassword });
+  const email = cookieStore.get("reset_email")?.value;
+
+  const validation = newPasswordSchema.safeParse({
+    newPassword,
+    confirmPassword,
+  });
   if (!validation.success) {
     return {
       success: false,
       errors: validation.error.flatten().fieldErrors,
     };
   }
-  try{
+  if (!email) {
+    return {
+      success: false,
+      errors: {
+        newPassword: [
+          "Your reset session has expired. Request a new reset code.",
+        ],
+      },
+    };
+  }
+  try {
     await setNewPassword(email, newPassword);
-  }catch{
+  } catch {
     return {
       success: false,
       errors: { newPassword: ["Failed to set new password"] },
-    };  
+    };
   }
-  // Use the stored email from the previous step
+  cookieStore.delete("reset_email");
+  return { success: true, errors: {} };
 }

@@ -3,20 +3,40 @@
 import Input from "@/components/shared/Input";
 import { useActionState } from "react";
 import { authenticateAction } from "@/features/auth/actions";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, LoaderCircle } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/components/Providers";
 
 function LoginForm() {
-  const [formState, formAction, pending] = useActionState(authenticateAction, {
-    success: false,
-    errors: {},
-    user: null,
-  });
+  const router = useRouter();
+  const { showToast } = useToast();
+  const [formState, formAction, pending] = useActionState(
+    async (
+      previousState: Parameters<typeof authenticateAction>[0],
+      formData: FormData
+    ) => {
+      const result = await authenticateAction(previousState, formData);
+      if (result.success) {
+        showToast("Signed in successfully.");
+        router.replace("/");
+      }
+      return result;
+    },
+    {
+      success: false,
+      errors: {},
+      user: null,
+    }
+  );
 
   return (
     <form id="auth-form" className="space-y-6" action={formAction}>
       <div>
-        <label htmlFor="login-email" className="mb-2 block text-sm font-bold text-neutral-700 dark:text-neutral-300">
+        <label
+          htmlFor="login-email"
+          className="mb-2 block text-sm font-bold text-neutral-700 dark:text-neutral-300"
+        >
           Email
         </label>
         <div className="relative">
@@ -41,7 +61,10 @@ function LoginForm() {
       </div>
 
       <div>
-        <label htmlFor="login-password" className="mb-2 block text-sm font-bold text-neutral-700 dark:text-neutral-300">
+        <label
+          htmlFor="login-password"
+          className="mb-2 block text-sm font-bold text-neutral-700 dark:text-neutral-300"
+        >
           Password
         </label>
         <div className="relative">
@@ -53,7 +76,7 @@ function LoginForm() {
             type="password"
             id="login-password"
             name="password"
-            defaultValue={"Badmin@123"}
+            defaultValue={"Bfla@#5465"}
             aria-invalid={Boolean(formState.errors.password)}
             placeholder="••••••••"
           />
@@ -77,11 +100,15 @@ function LoginForm() {
 
       <button
         type="submit"
-        disabled={pending}
+        disabled={pending || formState.success}
+        aria-busy={pending || formState.success}
         className="flex w-full items-center justify-center rounded-xl bg-neutral-900 py-3.5 font-bold text-white shadow-lg shadow-neutral-900/20 transition-all hover:bg-neutral-800 disabled:opacity-70 dark:bg-white dark:text-neutral-900 dark:shadow-none dark:hover:bg-neutral-200"
       >
-        {pending ? (
-          <span className="loading loading-spinner">loading</span>
+        {pending || formState.success ? (
+          <span role="status">
+            <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
+            <span className="sr-only">Signing in...</span>
+          </span>
         ) : (
           "Sign In"
         )}

@@ -1,7 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { CheckCircle, AlertCircle, X } from "lucide-react";
+import { CheckCircle, AlertCircle } from "lucide-react";
+import { toast, Toaster } from "sonner";
 
 // --- Toast Context ---
 
@@ -18,46 +19,8 @@ export const useToast = () => {
   return context;
 };
 
-const ToastMessage = ({
-  message,
-  type,
-  onClose,
-}: {
-  message: string;
-  type: "success" | "error";
-  onClose: () => void;
-}) => {
-  useEffect(() => {
-    const timer = setTimeout(onClose, 3000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
-
-  return (
-    <div
-      className={`animate-slideUp pointer-events-auto flex items-center gap-3 rounded-2xl border px-5 py-4 shadow-xl transition-colors ${
-        type === "success"
-          ? "border-lime-100 bg-white text-neutral-800 dark:border-lime-900/30 dark:bg-neutral-800 dark:text-neutral-200"
-          : "border-red-100 bg-white text-neutral-800 dark:border-red-900/30 dark:bg-neutral-800 dark:text-neutral-200"
-      }`}
-    >
-      <div
-        className={`rounded-full p-1.5 ${type === "success" ? "bg-lime-100 text-lime-700 dark:bg-lime-900/50 dark:text-lime-400" : "bg-red-100 text-red-600 dark:bg-red-900/50 dark:text-red-400"}`}
-      >
-        {type === "success" ? (
-          <CheckCircle size={18} />
-        ) : (
-          <AlertCircle size={18} />
-        )}
-      </div>
-      <p className="text-sm font-semibold">{message}</p>
-      <button
-        onClick={onClose}
-        className="ml-4 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200"
-      >
-        <X size={16} />
-      </button>
-    </div>
-  );
+const showToast = (message: string, type: "success" | "error" = "success") => {
+  toast[type](message);
 };
 
 // --- Theme Context ---
@@ -79,10 +42,6 @@ export const useTheme = () => {
 // --- Main Provider Wrapper ---
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
-  const [toasts, setToasts] = useState<
-    { id: number; message: string; type: "success" | "error" }[]
-  >([]);
-
   // Theme State
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [themeReady, setThemeReady] = useState(false);
@@ -114,33 +73,34 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
     setIsDarkMode((prev) => !prev);
   };
 
-  const showToast = (
-    message: string,
-    type: "success" | "error" = "success"
-  ) => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, message, type }]);
-  };
-
-  const removeToast = (id: number) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
-  };
-
   return (
     <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
       <ToastContext.Provider value={{ showToast }}>
         {children}
-        {/* Toast Container */}
-        <div className="pointer-events-none fixed right-6 bottom-6 z-[70] flex flex-col gap-3">
-          {toasts.map((toast) => (
-            <ToastMessage
-              key={toast.id}
-              message={toast.message}
-              type={toast.type}
-              onClose={() => removeToast(toast.id)}
-            />
-          ))}
-        </div>
+        <Toaster
+          theme={isDarkMode ? "dark" : "light"}
+          position="bottom-right"
+          closeButton
+          duration={4500}
+          icons={{
+            success: (
+              <CheckCircle
+                size={20}
+                className="text-lime-600 dark:text-lime-400"
+              />
+            ),
+            error: (
+              <AlertCircle
+                size={20}
+                className="text-red-500 dark:text-red-400"
+              />
+            ),
+          }}
+          toastOptions={{
+            className: "app-toast",
+            classNames: { title: "font-semibold" },
+          }}
+        />
       </ToastContext.Provider>
     </ThemeContext.Provider>
   );
