@@ -1,5 +1,6 @@
 "use server";
 import login, {
+  logoutApi,
   RequestPasswordReset,
   setNewPassword,
   verifyResetOtp,
@@ -51,8 +52,9 @@ export async function authenticateAction(
 export async function logoutAction() {
   const cookieStore = await cookies();
   const refresh = cookieStore.get("refresh")?.value;
+  logout();
   if (refresh) {
-    const response = await logout(refresh);
+    const response = await logoutApi(refresh);
     // if (!response.ok && response.status !== 400) {
     //   throw new Error("Could not revoke the refresh token");
     // }
