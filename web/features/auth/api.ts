@@ -54,7 +54,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
   return response.json();
 }
 
-export async function logout(refresh: string) {
+export async function logoutApi(refresh: string) {
   const response = await fetch(`${url}/users/logout/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
