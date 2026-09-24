@@ -6,7 +6,7 @@ from users.services.verification_service import VerificationService
 from .models import User
 from users.services.verification_service import VerificationService
 
-class RegisterSerializer(serializers.ModelSerializer):
+class RegisterSerializer(serializers.modelserializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
 
     class Meta:
@@ -70,7 +70,7 @@ class LogoutSerializer(serializers.Serializer):
        refresh = serializers.CharField(help_text="Refresh token to blacklist")
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(serializers.modelserializer):
     class Meta:
         model = User
         fields = (

@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from products.Models import Product, Brand, Category
+from products.models import Product, Brand, Category
 from products.serializers.ProductListSerializer import BrandSummarySerializer, CategorySummarySerializer
 
 
-class ProductWriteSerializer(serializers.ModelSerializer):
+class ProductWriteSerializer(serializers.modelserializer):
     brand = serializers.PrimaryKeyRelatedField(queryset=Brand.objects.all())
     category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
     class Meta:

@@ -1,17 +1,17 @@
 from django.db.models import OuterRef
 from rest_framework import serializers
-from products.Models import Product,Brand,Category, ProductVariant
+from products.models import Product,Brand,Category, ProductVariant
 from products.serializers import ProductImageSerializer, ProductVariantSerializer, ProductDetailSerializer
 
 
 
-class BrandSummarySerializer(serializers.ModelSerializer):
+class BrandSummarySerializer(serializers.modelserializer):
     class Meta:
         model = Brand
         fields = ['id', 'name', 'slug']
 
 
-class CategorySummarySerializer(serializers.ModelSerializer):
+class CategorySummarySerializer(serializers.modelserializer):
     class Meta:
         model = Category
         fields = ['id', 'name', 'slug']
@@ -19,13 +19,13 @@ class CategorySummarySerializer(serializers.ModelSerializer):
 
 
 
-class ProductListSerializer(serializers.ModelSerializer):
+class ProductListSerializer(serializers.modelserializer):
     brand = BrandSummarySerializer(read_only=True)
     category = CategorySummarySerializer(read_only=True)
 
     starting_price = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     in_stock = serializers.BoundField(read_only=True)
-    primary_image = serializers.SerializerMethodField()
+    primary_image = serializers.URLField(read_only=True, allow_null=True)
     class Meta:
         model = Product
         fields = ['id', 'title', 'slug', 'brand', 'category', 'starting_price', 'in_stock', 'primary_image', 'status', 'published_at']
@@ -33,13 +33,7 @@ class ProductListSerializer(serializers.ModelSerializer):
     
 
    
-    def get_primary_image(self, obj):
-        image = next(iter(obj.images.all()), None)
-        return image.image_url if image else None
-
-
-
-class ProductDetailSerializer(serializers.ModelSerializer):
+class ProductDetailSerializer(serializers.modelserializer):
     brand = BrandSummarySerializer(read_only=True)
     category = CategorySummarySerializer(read_only=True)
     variants = ProductVariantSerializer(many=True, read_only=True)

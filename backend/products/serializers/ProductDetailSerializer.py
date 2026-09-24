@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from ..Models.ProductDetail import ProductDetail 
+from ..models.ProductDetail import ProductDetail 
 
 
-class ProductDetailSerializer(serializers.ModelSerializer):
+class ProductDetailSerializer(serializers.modelserializer):
 
     class Meta:
         model = ProductDetail

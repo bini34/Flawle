@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 from core.models import TimeStampedModel
-from products.Models.Product import Product
+from products.models.Product import Product
 
 
 class ProductDetail(TimeStampedModel):

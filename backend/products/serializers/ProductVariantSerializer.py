@@ -1,9 +1,9 @@
 from django.core import serializers
 
-from products.Models.ProductVariant import ProductVariant
+from products.models.ProductVariant import ProductVariant
 
 
-class ProductVariantSerializer(serializers.ModelSerializer):
+class ProductVariantSerializer(serializers.modelserializer):
     class Meta:
         model = ProductVariant
         fields = ['id', 'product', 'sku', 'price', 'stock_qty','is_active', 'created_at', 'updated_at']

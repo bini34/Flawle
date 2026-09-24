@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .Models.ProductDetail import (
+from .models.ProductDetail import (
 	Category,
 	Product,
 	ProductVariant,

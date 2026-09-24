@@ -1,9 +1,9 @@
 from django.core import serializers
 
-from products.Models.Brand import Brand
+from products.models.Brand import Brand
 
 
-class BrandSerializer(serializers.ModelSerializer):
+class BrandSerializer(serializers.modelserializer):
     class Meta:
         model = Brand
         fields = ['id', 'name', 'slug', 'description', 'logo_url', 'created_at', 'updated_at']

@@ -1,8 +1,8 @@
 from django.core import serializers
-from products.Models.Category import Category
+from products.models.Category import Category
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class CategorySerializer(serializers.modelserializer):
     class Meta:
         model = Category
         fields = ['id', 'name', 'slug', 'parent', 'created_at', 'updated_at']

@@ -3,8 +3,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
 from core.models import TimeStampedModel
-from products.Models import Category
-from products.Models.Brand import Brand
+from products.models import Category
+from products.models.Brand import Brand
 
 class Product(TimeStampedModel):
     class Status(models.TextChoices):

@@ -1,9 +1,9 @@
 from django.core import serializers
 
-from products.Models import ProductImage
+from products.models import ProductImage
 
 
-class ProductImageSerializer(serializers.ModelSerializer):
+class ProductImageSerializer(serializers.modelserializer):
     class Meta:
         model = ProductImage
         fields = ['id',  'image_url', 'public_id','alt_text','position', 'created_at', 'updated_at']

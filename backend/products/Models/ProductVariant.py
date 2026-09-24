@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.utils.text import slugify
 
 from core.models import TimeStampedModel
-from products.Models.Product import Product
+from products.models.Product import Product
 
 
 def generate_sku():
